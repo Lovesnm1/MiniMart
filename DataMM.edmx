@@ -1,0 +1,569 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MiniMartModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Goods">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Price" Type="float" />
+          <Property Name="Brand" Type="nvarchar" MaxLength="50" />
+          <Property Name="Catagory" Type="nvarchar" MaxLength="50" />
+          <Property Name="MFG" Type="date" />
+          <Property Name="EXP" Type="date" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="InventoryNumber" Type="int" />
+          <Property Name="ShipmentNumber" Type="int" />
+          <Property Name="Hide" Type="bit" />
+        </EntityType>
+        <EntityType Name="GoodsReceived">
+          <Key>
+            <PropertyRef Name="Code" />
+            <PropertyRef Name="ID_Goods" />
+          </Key>
+          <Property Name="Code" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="ID_Goods" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="CreatedDate" Type="date" />
+          <Property Name="Price" Type="float" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Total" Type="float" />
+          <Property Name="Note" Type="ntext" />
+          <Property Name="Seller" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="int" />
+          <Property Name="Hide" Type="bit" />
+        </EntityType>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="CreatedDate" Type="date" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ID_Membership" Type="nchar" MaxLength="10" />
+          <Property Name="ID_Cashier" Type="nchar" MaxLength="10" />
+          <Property Name="Hide" Type="bit" />
+        </EntityType>
+        <EntityType Name="InvoiceDetails">
+          <Key>
+            <PropertyRef Name="ID_Goods" />
+            <PropertyRef Name="ID_Invoice" />
+          </Key>
+          <Property Name="ID_Goods" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="ID_Invoice" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Total" Type="float" />
+        </EntityType>
+        <EntityType Name="Membership">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nchar" MaxLength="10" />
+          <Property Name="Points" Type="int" />
+          <Property Name="Hide" Type="bit" />
+        </EntityType>
+        <EntityType Name="Shift">
+          <Key>
+            <PropertyRef Name="Shift" />
+            <PropertyRef Name="Counter" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="Shift" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Counter" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="ID_Cashier" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nchar" MaxLength="10" />
+          <Property Name="BasicSalary" Type="int" />
+          <Property Name="Allowance" Type="int" />
+          <Property Name="Bonus" Type="int" />
+          <Property Name="Role" Type="nchar" MaxLength="50" />
+          <Property Name="Hide" Type="bit" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_GoodsReceived_Goods">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
+          <End Role="GoodsReceived" Type="Self.GoodsReceived" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GoodsReceived">
+              <PropertyRef Name="ID_Goods" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Membership">
+          <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Membership">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="ID_Membership" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Staff">
+          <End Role="Staff" Type="Self.Staff" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staff">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="ID_Cashier" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceDetails_Goods">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
+          <End Role="InvoiceDetails" Type="Self.InvoiceDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceDetails">
+              <PropertyRef Name="ID_Goods" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceDetails_Invoice">
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="1" />
+          <End Role="InvoiceDetails" Type="Self.InvoiceDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceDetails">
+              <PropertyRef Name="ID_Invoice" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shift_Staff">
+          <End Role="Staff" Type="Self.Staff" Multiplicity="0..1" />
+          <End Role="Shift" Type="Self.Shift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staff">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Shift">
+              <PropertyRef Name="ID_Cashier" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MiniMartModelStoreContainer">
+          <EntitySet Name="Goods" EntityType="Self.Goods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GoodsReceived" EntityType="Self.GoodsReceived" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceDetails" EntityType="Self.InvoiceDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Membership" EntityType="Self.Membership" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shift" EntityType="Self.Shift" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_GoodsReceived_Goods" Association="Self.FK_GoodsReceived_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="GoodsReceived" EntitySet="GoodsReceived" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Membership" Association="Self.FK_Invoice_Membership">
+            <End Role="Membership" EntitySet="Membership" />
+            <End Role="Invoice" EntitySet="Invoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Staff" Association="Self.FK_Invoice_Staff">
+            <End Role="Staff" EntitySet="Staff" />
+            <End Role="Invoice" EntitySet="Invoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceDetails_Goods" Association="Self.FK_InvoiceDetails_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceDetails_Invoice" Association="Self.FK_InvoiceDetails_Invoice">
+            <End Role="Invoice" EntitySet="Invoice" />
+            <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shift_Staff" Association="Self.FK_Shift_Staff">
+            <End Role="Staff" EntitySet="Staff" />
+            <End Role="Shift" EntitySet="Shift" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MiniMartModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Good">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="InvoiceDetails" Relationship="Self.FK_InvoiceDetails_Goods" FromRole="Goods" ToRole="InvoiceDetails" />
+          <Property Name="Hide" Type="Boolean" />
+          <Property Name="Catagory" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MFG" Type="DateTime" Precision="0" />
+          <Property Name="EXP" Type="DateTime" Precision="0" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InventoryNumber" Type="Int32" />
+          <Property Name="ShipmentNumber" Type="Int32" />
+          <NavigationProperty Name="GoodsReceiveds" Relationship="MiniMartModel.FK_GoodsReceived_Goods" FromRole="Good" ToRole="GoodsReceived" />
+        </EntityType>
+        <EntityType Name="GoodsReceived">
+          <Key>
+            <PropertyRef Name="ID_Goods" />
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ID_Goods" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Total" Type="Double" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Seller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="Int32" />
+          <Property Name="Hide" Type="Boolean" />
+          <NavigationProperty Name="Good" Relationship="MiniMartModel.FK_GoodsReceived_Goods" FromRole="GoodsReceived" ToRole="Good" />
+        </EntityType>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="CustomerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ID_Membership" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ID_Cashier" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Membership" Relationship="Self.FK_Invoice_Membership" FromRole="Invoice" ToRole="Membership" />
+          <NavigationProperty Name="Staff" Relationship="Self.FK_Invoice_Staff" FromRole="Invoice" ToRole="Staff" />
+          <NavigationProperty Name="InvoiceDetails" Relationship="Self.FK_InvoiceDetails_Invoice" FromRole="Invoice" ToRole="InvoiceDetails" />
+          <Property Name="Hide" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="InvoiceDetail">
+          <Key>
+            <PropertyRef Name="ID_Goods" />
+            <PropertyRef Name="ID_Invoice" />
+          </Key>
+          <Property Name="ID_Goods" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ID_Invoice" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Total" Type="Double" />
+          <NavigationProperty Name="Good" Relationship="Self.FK_InvoiceDetails_Goods" FromRole="InvoiceDetails" ToRole="Goods" />
+          <NavigationProperty Name="Invoice" Relationship="Self.FK_InvoiceDetails_Invoice" FromRole="InvoiceDetails" ToRole="Invoice" />
+        </EntityType>
+        <EntityType Name="Membership">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+          <Property Name="Points" Type="Int32" />
+          <NavigationProperty Name="Invoices" Relationship="Self.FK_Invoice_Membership" FromRole="Membership" ToRole="Invoice" />
+          <Property Name="Hide" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Shift">
+          <Key>
+            <PropertyRef Name="Shift1" />
+            <PropertyRef Name="Counter" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="Shift1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Counter" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ID_Cashier" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Staff" Relationship="Self.FK_Shift_Staff" FromRole="Shift" ToRole="Staff" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+          <Property Name="BasicSalary" Type="Int32" />
+          <Property Name="Allowance" Type="Int32" />
+          <Property Name="Bonus" Type="Int32" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Invoices" Relationship="Self.FK_Invoice_Staff" FromRole="Staff" ToRole="Invoice" />
+          <NavigationProperty Name="Shifts" Relationship="Self.FK_Shift_Staff" FromRole="Staff" ToRole="Shift" />
+          <Property Name="Hide" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_InvoiceDetails_Goods">
+          <End Role="Goods" Type="Self.Good" Multiplicity="1" />
+          <End Role="InvoiceDetails" Type="Self.InvoiceDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceDetails">
+              <PropertyRef Name="ID_Goods" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Membership">
+          <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Membership">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="ID_Membership" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_Staff">
+          <End Role="Staff" Type="Self.Staff" Multiplicity="0..1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staff">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="ID_Cashier" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceDetails_Invoice">
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="1" />
+          <End Role="InvoiceDetails" Type="Self.InvoiceDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceDetails">
+              <PropertyRef Name="ID_Invoice" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shift_Staff">
+          <End Role="Staff" Type="Self.Staff" Multiplicity="0..1" />
+          <End Role="Shift" Type="Self.Shift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staff">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Shift">
+              <PropertyRef Name="ID_Cashier" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MiniMartEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Goods" EntityType="Self.Good" />
+          <EntitySet Name="GoodsReceiveds" EntityType="Self.GoodsReceived" />
+          <EntitySet Name="Invoices" EntityType="Self.Invoice" />
+          <EntitySet Name="InvoiceDetails" EntityType="Self.InvoiceDetail" />
+          <EntitySet Name="Memberships" EntityType="Self.Membership" />
+          <EntitySet Name="Shifts" EntityType="Self.Shift" />
+          <EntitySet Name="Staffs" EntityType="Self.Staff" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_InvoiceDetails_Goods" Association="Self.FK_InvoiceDetails_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Membership" Association="Self.FK_Invoice_Membership">
+            <End Role="Membership" EntitySet="Memberships" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_Staff" Association="Self.FK_Invoice_Staff">
+            <End Role="Staff" EntitySet="Staffs" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceDetails_Invoice" Association="Self.FK_InvoiceDetails_Invoice">
+            <End Role="Invoice" EntitySet="Invoices" />
+            <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shift_Staff" Association="Self.FK_Shift_Staff">
+            <End Role="Staff" EntitySet="Staffs" />
+            <End Role="Shift" EntitySet="Shifts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoodsReceived_Goods" Association="MiniMartModel.FK_GoodsReceived_Goods">
+            <End Role="Good" EntitySet="Goods" />
+            <End Role="GoodsReceived" EntitySet="GoodsReceiveds" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_GoodsReceived_Goods">
+          <End Type="MiniMartModel.Good" Role="Good" Multiplicity="1" />
+          <End Type="MiniMartModel.GoodsReceived" Role="GoodsReceived" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Good">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GoodsReceived">
+              <PropertyRef Name="ID_Goods" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MiniMartModelStoreContainer" CdmEntityContainer="MiniMartEntities">
+          <EntitySetMapping Name="Goods">
+            <EntityTypeMapping TypeName="MiniMartModel.Good">
+              <MappingFragment StoreEntitySet="Goods">
+                <ScalarProperty Name="ShipmentNumber" ColumnName="ShipmentNumber" />
+                <ScalarProperty Name="InventoryNumber" ColumnName="InventoryNumber" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="EXP" ColumnName="EXP" />
+                <ScalarProperty Name="MFG" ColumnName="MFG" />
+                <ScalarProperty Name="Catagory" ColumnName="Catagory" />
+                <ScalarProperty Name="Hide" ColumnName="Hide" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GoodsReceiveds">
+            <EntityTypeMapping TypeName="MiniMartModel.GoodsReceived">
+              <MappingFragment StoreEntitySet="GoodsReceived">
+                <ScalarProperty Name="Hide" ColumnName="Hide" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="ID_Goods" ColumnName="ID_Goods" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Seller" ColumnName="Seller" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Invoices">
+            <EntityTypeMapping TypeName="MiniMartModel.Invoice">
+              <MappingFragment StoreEntitySet="Invoice">
+                <ScalarProperty Name="Hide" ColumnName="Hide" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="ID_Membership" ColumnName="ID_Membership" />
+                <ScalarProperty Name="ID_Cashier" ColumnName="ID_Cashier" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceDetails">
+            <EntityTypeMapping TypeName="MiniMartModel.InvoiceDetail">
+              <MappingFragment StoreEntitySet="InvoiceDetails">
+                <ScalarProperty Name="ID_Goods" ColumnName="ID_Goods" />
+                <ScalarProperty Name="ID_Invoice" ColumnName="ID_Invoice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Memberships">
+            <EntityTypeMapping TypeName="MiniMartModel.Membership">
+              <MappingFragment StoreEntitySet="Membership">
+                <ScalarProperty Name="Hide" ColumnName="Hide" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Points" ColumnName="Points" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shifts">
+            <EntityTypeMapping TypeName="MiniMartModel.Shift">
+              <MappingFragment StoreEntitySet="Shift">
+                <ScalarProperty Name="Shift1" ColumnName="Shift" />
+                <ScalarProperty Name="Counter" ColumnName="Counter" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ID_Cashier" ColumnName="ID_Cashier" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Staffs">
+            <EntityTypeMapping TypeName="MiniMartModel.Staff">
+              <MappingFragment StoreEntitySet="Staff">
+                <ScalarProperty Name="Hide" ColumnName="Hide" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="BasicSalary" ColumnName="BasicSalary" />
+                <ScalarProperty Name="Allowance" ColumnName="Allowance" />
+                <ScalarProperty Name="Bonus" ColumnName="Bonus" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="MiniMartModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
